@@ -44,7 +44,7 @@ def Get_page(id,app_num,path_number):
             # select top 10 pages
             if count>=10:
                 break
-            time.sleep(6)
+            # time.sleep(6)
             
         except urllib2.HTTPError,e:
             print e.code
