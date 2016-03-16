@@ -1,4 +1,4 @@
-
+# -*- coding: utf-8 -*- 
 import re
 import sys
 import time
@@ -7,9 +7,12 @@ import urllib
 import urllib2
 from bs4 import BeautifulSoup
 
-
+# id：app的id编号，参见app_id_lists中的url连接的id编号
+# app_num：下载的app序号
+# path_number：写入的文件名，以序号命名
 def Get_page(id,app_num,path_number):
     url="https://play.google.com/store/getreviews?authuser=0"
+    # count：每一个app review的page计数器
     count=0
     values={}
     values['reviewType']='0'
@@ -20,12 +23,10 @@ def Get_page(id,app_num,path_number):
     values['hl']='en'
     headers={'User-Agent':'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.80 Safari/537.36','Referer':'https://play.google.com/store/apps/details?id='+id+'&hl=en','Content-Type':'application/x-www-form-urlencoded;charset=UTF-8'}
     
+    # 配置翻墙代理
     # proxy = '127.0.0.1:8787'
     # opener = urllib2.build_opener(urllib2.ProxyHandler({'https':proxy}))
     # urllib2.install_opener(opener)
-    
-    # data=urllib.urlencode(values)
-    # request=urllib2.Request(url,data,headers)
     page=""
     number_path=0
     while 1:
@@ -35,13 +36,15 @@ def Get_page(id,app_num,path_number):
         try:
             response=urllib2.urlopen(request)
             page=response.read()
+            # 对于无json对象返回的处理
             if 'div'not in page:
                 break
-            # print page
-            # generate_data(page)
             number_path=write_data(id,page,count,app_num,path_number)
             count=count+1
-            time.sleep(8)
+            # select top 10 pages
+            if count>=10:
+                break
+            time.sleep(6)
             
         except urllib2.HTTPError,e:
             print e.code
@@ -49,25 +52,12 @@ def Get_page(id,app_num,path_number):
         except urllib2.URLError,e:
             print e.reason
             break
-        # response=urllib2.urlopen(request)
-        # if response
-        # page=response.read()
-        # print page
-        # count=count+1
-        # request=urllib2.Request(url,data,headers)
-        # if count==4:
-        #     break
-        # break
-    # return page
+# 返回当前app写入文件名，序号
     return number_path
-    
-def generate_data(text):
-    # path='D:/Project/Expriment/Review/review.txt'
-    # f=open(path)
-    # text=f.read()
-    
-    
-    
+
+# text：抓取网页返回的json格式的数据
+def generate_data(text):    
+    # 设置系统编码
     reload(sys)
     sys.setdefaultencoding('utf-8')
     
@@ -91,17 +81,12 @@ def generate_data(text):
     review_author_name=re.compile(ur'<span class="author-name">(.+?)</span>')
     review_date=re.compile(ur'<span class="review-date">(.+?)</span>')
     review_title=re.compile(ur'<span class="review-title">(.+?)<div')
-    
-    
-    # for i in review_author_name.findall(comments):
-    #     print i
-    
+        
     author_names=[]
     dates=[]
     review_titles=[]
     review_datas=[]
-    
-    
+        
     for j in review_author_name.finditer(comments):
         if j is None:
             author_names.append(" ")
@@ -133,32 +118,7 @@ def generate_data(text):
                 review_titles.append(" ")
                 review_datas.append(" ")
     
-    return author_names,dates,review_titles,review_datas
-    
-    
-    # author_nameM=review_author_name.search(comments)
-    # if author_nameM is not None:
-    #     author_id=author_nameM.group(1)
-    #     # author_name=author_nameM.group(2)
-        
-    #     print author_id,author_name
-    # dateM=review_date.search(comments)
-    # if dateM is not None:
-    #     date=dateM.group(1)
-        
-    #     print date
-    # titleM=review_title.search(comments)
-    # if titleM is not None:
-    #     content=titleM.group(1).split('</span>')
-    #     if len(content)==2:
-    #         title=content[0]
-    #         review_contents=content[1]
-            
-    #         print title,review_contents
-
-    
-    # print author_id,author_name,date,title,review_contents
-        
+    return author_names,dates,review_titles,review_datas       
 
 def review_object(author_name,date,title,review_contents):
     review_item={}
@@ -168,14 +128,17 @@ def review_object(author_name,date,title,review_contents):
     review_item["review_contents"]=review_contents
     return review_item
 
-
+# app_id：app的url中的id
+# review_itemss：app的review data信息
+# num：json文件的文件名编号
 def write_to_json(app_id,review_itemss,num):
     app_review=[]
     app_item={}
     app_item[app_id]=review_itemss
     app_review.append(app_item)
     
-    number=1500
+    # number设置每一个json文件中最大存储的review_item数量
+    number=500000
     count=0
     exist=False
     position=0
@@ -183,8 +146,7 @@ def write_to_json(app_id,review_itemss,num):
     path=str(num)+".json"
     file=open(path)
     fp=json.load(file)
-    
-    
+        
     for i in range(0,len(fp)):
         map=fp[i]
         if map.has_key(app_id):
@@ -216,9 +178,14 @@ def write_to_json(app_id,review_itemss,num):
             f=open(path,"w+")
             json.dump(fp,f)
             f.close()
+    # 返回当前写的json文件的路径名编号
     return num
     
-    
+    # id：app的url中的id编号
+    # page：response返回的数据
+    # pageNum：review的page编号
+    # app_id：app的序号
+    # path_number：写入json文件名编号
 def write_data(id,page,pageNum,app_id,path_number):
     review_items=generate_data(page)
     author_names=review_items[0]
@@ -235,23 +202,14 @@ def write_data(id,page,pageNum,app_id,path_number):
     else:
         return 0
     
-    
-    # for item in range(0,len(author_names)):
-    #     review_item=review_object(author_names[item],dates[item],review_titles[item],review_datas[item])
-    #     reviews.append(review_item)
-    
-    # app_id="com.google.apples"
-    # path_num=1
     num=write_to_json(id,reviews,path_number)
     format="%Y-%m-%d %X"
     t=time.strftime(format,time.localtime(time.time()))
     print 'App_id: ',app_id,'  App_name: ',id,"     Page: ",pageNum,'    Finished    ',t
-    # review_app(app_id,reviews)
+    # 返回写入文件名编号
     return num
 
-
-
-
+# 从文件中读取app_id
 def get_id(app_path):
     app_id_lists=[]
     file_app=open(app_path)
@@ -261,11 +219,6 @@ def get_id(app_path):
     return app_id_lists
         
 if __name__=='__main__':
-    # write_file()
-    # id="com.smgstudio.thumbdrift"
-    # source_json(id)
-    # generate_data()
-    # id="com.facebook.katana"
     app_lists=[]
     app_id_path="wangrun"
     app_lists=get_id(app_id_path)
@@ -274,7 +227,6 @@ if __name__=='__main__':
     for id in range(0,len(app_lists)):
         new=Get_page(app_lists[id].strip(),id,prior)
         if new==0:
-            # new=prior
             pass
         else:
             prior=new
