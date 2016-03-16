@@ -42,8 +42,9 @@
 # t=time.strftime(format,time.localtime(time.time()))
 # print t
 
-s="hEllo"
-if 'j' not in s:
-    print '000'    
+# s="hEllo"
+# if 'j' not in s:
+#     print '000'    
+print "Hello"
 
 
