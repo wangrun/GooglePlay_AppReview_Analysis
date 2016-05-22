@@ -37,8 +37,13 @@ def Get_page(id,app_num,path_number):
             response=urllib2.urlopen(request)
             page=response.read()
             # 对于无json对象返回的处理
-            if 'div'not in page:
+            if 'div' not in page:
                 break
+            if 'Sorry! This content is not in' in page:
+                break
+            if 'the requested URL was not found on this server' in page:
+                break
+            # 
             number_path=write_data(id,page,count,app_num,path_number)
             count=count+1
             # select top 10 pages
