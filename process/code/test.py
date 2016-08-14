@@ -20,3 +20,4 @@
 f=None
 f="244"
 print f
+print "Hello"
