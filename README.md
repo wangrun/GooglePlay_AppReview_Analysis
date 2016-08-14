@@ -1,10 +1,10 @@
 # GooglePlay_AppReview_Analysis
 
 #目录 file
-        描述：PScout中的permission与sensitive api的映射表
+**描述**：PScout中的permission与sensitive api的映射表
 
 #目录 process
-        描述：分析和处理Google Play的用户评论数据，按照用户评论的特点，将app进行聚类，得出每一个类别中的权限信息
+**描述**：分析和处理Google Play的用户评论数据，按照用户评论的特点，将app进行聚类，得出每一个类别中的权限信息
 ##1)data
         1. contents.json：利用关键词term筛选后的review和app的数据
         2. process_data__：去除停用词等，输入到LDA模型中的review数据
