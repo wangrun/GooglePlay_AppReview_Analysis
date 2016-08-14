@@ -23,4 +23,4 @@
 
 1. app_id_lists：存放Google Play的app ID列表，包括140万个app
 2. Crawler.py：抓取Google Play的爬虫代码
-3. template.json：存储Google Play用户评论数据样式，写入文件的模板.
+3. template.json：存储Google Play用户评论数据样式，写入文件的模板
