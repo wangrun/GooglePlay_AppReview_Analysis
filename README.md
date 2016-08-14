@@ -5,12 +5,12 @@
 
 #目录 process
 **描述**：分析和处理Google Play的用户评论数据，按照用户评论的特点，将app进行聚类，得出每一个类别中的权限信息
-##1)data
+## 1)data
 1. contents.json：利用关键词term筛选后的review和app的数据
 2. process_data__：去除停用词等，输入到LDA模型中的review数据
 3. overall：单词字典
 4. wangrun：类别的app集合，[topic,list(app_id)]
-##2)code
+## 2)code
 1. expandic.py:利用wordnet扩充语义，找出更多的同义词，构建语义字典，输出文件为overall
 2. Getreview.py:利用关键词term出现次数，筛选review数据，输出的文件为content.json
 3. process_data.py：处理content.json，去除标点符号、停用词等，文件输出至LDA模型中训练,输出文件为 process_data
