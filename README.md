@@ -6,8 +6,8 @@
 #目录 process
         描述：分析和处理Google Play的用户评论数据，按照用户评论的特点，将app进行聚类，得出每一个类别中的权限信息
 ##1)data
-        1. \**contents.json\**：利用关键词term筛选后的review和app的数据
-        2. \_process_data\_：去除停用词等，输入到LDA模型中的review数据
+        1. **contents.json**：利用关键词term筛选后的review和app的数据
+        2. __process_data__：去除停用词等，输入到LDA模型中的**review**数据
         3. overall：单词字典
         4. wangrun：类别的app集合，[topic,list(app_id)]
 ##2)code
