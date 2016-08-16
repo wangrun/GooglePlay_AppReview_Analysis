@@ -4,6 +4,7 @@
 # 根据LDA的训练模型，输出每一个主题的app列表，列表中包含的是app的ID编号
 import os
 import json
+import math
 import string
 import numpy as np
 from sklearn.cluster import KMeans
@@ -17,7 +18,10 @@ def sort_data(path):
         list=[]
         index=0
         for word in line.split():
-            list.append((index,float(word)))
+            if math.isnan(float(word)):
+                list.append((index,0.0))
+            else:
+                list.append((index,float(word)))
             index=index+1
         list.sort(key=lambda x:x[1],reverse=True)
         map_content[str(line_num)]=list
@@ -26,7 +30,8 @@ def sort_data(path):
     return map_content
 
 
-# 根据输入的index返回单词,input{path of dictionary,the index of an object that return},output{the word of specific index}
+# 根据输入的index返回单词,input{path of dictionary,the index of an object that return}
+# output{the word of specific index}
 def get_dic(path_dic,position):
     map_dic={}
     file=open(path_dic)
@@ -145,47 +150,14 @@ def cluster(map_content):
         print "topic"+str(key),lis.strip()
 
 def main():
-    # path="/home/wangrun/BTM/output/model/k20.pz"
-    # path="/home/wangrun/BTM/output/voca.txt"
-    # print get_dic(path,5)
 
     # path="/home/wangrun/Desktop/Experiment/BTM/BTM1/output/model/k20.pz_d"
     # map=sort_data(path)
     # cluster(map)
 
-    path="../data/run"
+    path="../data/k20.pz_d"
     map=sort_data(path)
     cluster_means(map)
-    # print map
-    # print cluster_K_means(map)
 
 if __name__=="__main__":
     main()
-
-# path="/home/wangrun/BTM/output/model/k20.pw_z"
-# path1="/home/wangrun/BTM/output/voca.txt"
-# file=open(path)
-# file1=open(path1)
-# count=0
-# list=[]
-# sort_list=[]
-# for line in file:
-#     for num in line.split():
-#         list.append(float(num))
-#     sort_list=sorted(list,reverse=True)
-#     # list.sort(reverse=True)
-#     break
-
-# map={}
-# for dic in file1:
-#     value=dic.split()
-#     # print value[0],value[1]
-#     map[value[0].strip()]=value[1]
-
-# for num in range(0,20):
-#     val=sort_list[num]
-#     index=list.index(val)
-#     print map[str(index)],val
-
-# file.close()
-# file1.close()

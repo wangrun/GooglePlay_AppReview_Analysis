@@ -45,7 +45,7 @@ def read_dic():
     dictionary.close()
     return word_list
 
-# f在一个字符串data中找出，word_list出现的次数
+# 在一个字符串data中找出，word_list出现的次数
 def verify(data,word_list):
     count=0
     for word in word_list:
