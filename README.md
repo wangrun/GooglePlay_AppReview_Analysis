@@ -10,6 +10,8 @@
 2. process_data__：去除停用词等，输入到LDA模型中的review数据
 3. overall：单词字典
 4. wangrun：类别的app集合，[topic,list(app_id)]
+5. run:测试数据
+6. doc_app_id:review_id与app_id的映射表
 
 ##code
 1. expandic.py:利用wordnet扩充语义，找出更多的同义词，构建语义字典，输出文件为overall
