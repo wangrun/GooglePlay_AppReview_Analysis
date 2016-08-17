@@ -9,7 +9,8 @@ import string
 
 # 根据输入的app ID编号，输出app的路径
 def find_app_id(app_id):
-    root_path="E:/experiment data/Google Play/metadata"
+    # root_path="E:/experiment data/Google Play/metadata"
+    root_path="H:/metadata"
     dirs=os.listdir(root_path)
     for dir in dirs:
         lis_dir=root_path+"/"+dir
@@ -53,7 +54,7 @@ def permission_max(list_per,top_number=3):
 
 # input:每一个主题下的app列表，输出的是每一个主题的特征表示（permission列表）
 def cal_topic_permission():
-    path="run"
+    path="yyyy"
     file=open(path)
     for line in file:
         list_per=[]
@@ -64,11 +65,12 @@ def cal_topic_permission():
             if permission_app_id==None:
                 continue
             list_per=list_per+permission_app_id
-        top_per=permission_max(list_per,top_number=5)
+        top_per=permission_max(list_per,top_number=20)
         print data[0]
         for top in top_per:
             # 输入的特定主题下的表示信息：permission的个数及名称
             print top[0],top[1]
+    file.close()
 
 # 计算特定的app聚类列表中的app的权限表示，某一个类别中权限的信息
 def main():
