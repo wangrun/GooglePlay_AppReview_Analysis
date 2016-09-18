@@ -43,7 +43,8 @@ def get_dic(path_dic,position):
     file.close()
     return map_dic[str(position)]
 
-# output{output a dic,(key:topic_id,value:app_id)},input{key:topic_id,value:lists of reivew_item_id}
+# output{output a dic,(key:topic_id,value:app_id)}
+# input{key:topic_id,value:lists of reivew_item_id}
 def parse_review_to_doc(map_cluster):
     map_dic={}
     # document id mapping
